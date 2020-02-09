@@ -48,7 +48,7 @@ export class PlayUtils {
             case PlayMode.TRAINING:
                 let lettreJoueur1: IAPlayer = new IAPlayer(1, true, Color.ROUGE);
                 let lettreJoueur2: IAPlayer = new IAPlayer(1, true, Color.JAUNE);
-                for (let iter: number = 0; iter < 1000; iter++) {
+                for (let iter: number = 0; iter < 100000; iter++) {
                     // a chaque partie les joueurs vont moins explorer et plus exploiter
                     lettreJoueur1.explorationPart -= 0.001;
                     lettreJoueur2.explorationPart -= 0.001;
