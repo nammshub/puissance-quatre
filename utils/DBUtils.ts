@@ -1,6 +1,7 @@
 import { Action } from '../models/Action';
 import { Grille } from '../models/Grille';
 import { Color } from '../models/Color';
+
 const fs = require('fs');
 
 export class DBUtils {
@@ -30,7 +31,6 @@ export class DBUtils {
     static updateDatabase(listActions: Array<Action>) {
         listActions.forEach(action => {
             if (DBUtils.mapGrilleJoueur.has(JSON.stringify({ grille: action.grille, couleur: action.color }))) {
-                console.log('grille + couleur trouvee ');
                 // on met à jour la reward pour la colonne jouee par le joueur donne sur la grille donnee
                 let listColonneReward: Array<{ colonne: number, reward: number }> = DBUtils.mapGrilleJoueur.get(JSON.stringify({ grille: action.grille, couleur: action.color }));
                 let found = false;
@@ -48,7 +48,6 @@ export class DBUtils {
 
             }
             else {
-                console.log('grille + couleur non trouvee ');
                 // on injecte dans notre map cette configuration de grille, ce joueur ainsi que la colonne jouee et la reward
                 let listColonneReward: Array<{ colonne: number, reward: number }> = new Array<{ colonne: number, reward: number }>();
                 // on ajoute cette colonne - reward aux valeurs de la clef dans la map

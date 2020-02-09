@@ -53,6 +53,7 @@ export class PlayUtils {
                     lettreJoueur1.explorationPart -= 0.001;
                     lettreJoueur2.explorationPart -= 0.001;
                     let playTraining = new Play(PlayMode.TRAINING, lettreJoueur1, lettreJoueur2)
+                    console.log(' partie training numero ' + iter);
                     playTraining.launchPlay();
                     DBUtils.mapToJson();
                 }

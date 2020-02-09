@@ -20,7 +20,7 @@ readline.question(`choisissez une option :`, (option: string) => {
     lancerPartie(numberOption);
     readline.close();
   } else {
-    console.log('Veuillez entrer un nombre entre 1 et 3 !' + [1, 2, 3].indexOf(numberOption));
+    console.log('Veuillez entrer un nombre entre 1 et 3 !');
   }
 });
 

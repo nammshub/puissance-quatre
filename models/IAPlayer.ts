@@ -19,7 +19,7 @@ export class IAPlayer extends Player {
         this.explorationPart = explorationPart;
         this.training = training;
         this.listActions = new Array<Action>();
-    };
+    }
 
     play(grille: Grille) {
         // on verifie si on va explorer ou exploiter
@@ -43,7 +43,7 @@ export class IAPlayer extends Player {
         }
         
         this.gereFinPartie(isWinner);
-    };
+    }
 
     gereFinPartie(isWinner: boolean){
         let recompense: number = isWinner?1:-1;
