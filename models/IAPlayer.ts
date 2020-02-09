@@ -76,9 +76,12 @@ export class IAPlayer extends Player {
         if (DBUtils.mapGrilleJoueur.has(JSON.stringify({grille: grille, couleur: couleur}))) {
             let listColonnesRewardSorted: Array<{colonne: number, reward: number}> = DBUtils.mapGrilleJoueur.get(JSON.stringify({grille: grille, couleur: couleur}))
             .filter( colonneReward => colonneReward.reward > 0)
-            .sort((result1, result2) => result1.reward > result2.reward?1:-1);
+            .sort((result1, result2) => result1.reward > result2.reward?-1:1);
             if(listColonnesRewardSorted.length > 0){
                 console.log("exploitation reussie => meilleur coup trouve ")
+                listColonnesRewardSorted.forEach(colonneReward => {
+                    console.log("colonne : " + colonneReward.colonne + " reward : " + colonneReward.reward);
+                })
                 meilleurCoupTrouve = true;
                 // si colonne trouvee on la joue
                 grille.insereJeton(listColonnesRewardSorted[0].colonne, this.color);
