@@ -74,12 +74,11 @@ export class IAPlayer extends Player {
         let meilleurCoupTrouve: boolean = false;
         // on regarde dans notre base de donnees si on a deja observe cette grille pour ce joueur et si oui on prend la colonne avec le plus haut taux de reward
         if (DBUtils.mapGrilleJoueur.has(JSON.stringify({grille: grille, couleur: couleur}))) {
-            console.log('la map DB a deja en memoire cette clef pour couleur ' + couleur + ' et pour grille ');
-            grille.describe();
             let listColonnesRewardSorted: Array<{colonne: number, reward: number}> = DBUtils.mapGrilleJoueur.get(JSON.stringify({grille: grille, couleur: couleur}))
             .filter( colonneReward => colonneReward.reward > 0)
             .sort((result1, result2) => result1.reward > result2.reward?1:-1);
             if(listColonnesRewardSorted.length > 0){
+                console.log("exploitation reussie => meilleur coup trouve ")
                 meilleurCoupTrouve = true;
                 // si colonne trouvee on la joue
                 grille.insereJeton(listColonnesRewardSorted[0].colonne, this.color);
