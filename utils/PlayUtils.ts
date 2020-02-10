@@ -48,10 +48,13 @@ export class PlayUtils {
             case PlayMode.TRAINING:
                 let lettreJoueur1: IAPlayer = new IAPlayer(1, true, Color.ROUGE);
                 let lettreJoueur2: IAPlayer = new IAPlayer(1, true, Color.JAUNE);
-                for (let iter: number = 0; iter < 100000; iter++) {
+                const nbrPartiesTraining = 50000;
+                const reductionExploration = 0.95 / nbrPartiesTraining;
+                for (let iter: number = 0; iter < nbrPartiesTraining; iter++) {
                     // a chaque partie les joueurs vont moins explorer et plus exploiter
-                    lettreJoueur1.explorationPart -= 0.001;
-                    lettreJoueur2.explorationPart -= 0.001;
+                    // on reduit l'exploration pour parvenir au final a 95% d'exploitation et 5% d'exploration => toujours garder un peu d'exploration !!
+                    lettreJoueur1.explorationPart -= reductionExploration;
+                    lettreJoueur2.explorationPart -= reductionExploration;
                     let playTraining = new Play(PlayMode.TRAINING, lettreJoueur1, lettreJoueur2)
                     console.log(' partie training numero ' + iter);
                     playTraining.launchPlay();

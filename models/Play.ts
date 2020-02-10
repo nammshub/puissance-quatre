@@ -2,6 +2,7 @@ import { Player } from "./Player";
 import { PlayMode } from "./PlayMode";
 import { Grille } from "./Grille";
 import { PlayUtils } from "../utils/PlayUtils";
+import { RandomUtils } from "../utils/RandomUtils";
 
 export class Play {
 
@@ -35,9 +36,10 @@ export class Play {
         }
     }
     launchDuelIA() {
+        let randomPremierJoueur = RandomUtils.getRandomInt(2);
         while (!(this.winner || this.grille.isRemplie())) {
             this.nbrTour++;
-            this.currentPlayer = this.nbrTour % 2 === 0 ? this.player1 : this.player2;
+            this.currentPlayer = (this.nbrTour + randomPremierJoueur) % 2 === 0 ? this.player1 : this.player2;
             this.currentPlayer.play(this.grille);
 
             // on laisse quelques secondes à un observateur humain pour voir les modifs de grille
@@ -59,9 +61,10 @@ export class Play {
     }
 
     launchTraining() {
+        let randomPremierJoueur = RandomUtils.getRandomInt(2);
         while (!(this.winner || this.grille.isRemplie())) {
             this.nbrTour++;
-            this.currentPlayer = this.nbrTour % 2 === 0 ? this.player1 : this.player2;
+            this.currentPlayer = (this.nbrTour + randomPremierJoueur) % 2 === 0 ? this.player1 : this.player2;
             this.currentPlayer.play(this.grille);
             this.winner = PlayUtils.isWinner(this.grille, this.currentPlayer);
         }
