@@ -9,7 +9,9 @@ export abstract class Player {
     constructor(color: Color){
         this.color = color;
     }
-    abstract play(grille: Grille):void;
+    abstract play(grille: Grille);
     abstract learnWinner(currentPlayer?: Player):void;
+
+    
 
 }

@@ -31,6 +31,7 @@ export class Grille {
         while (this.valeurs[ligne][colonneCible] !== '0') {
             ligne++;
         }
+        console.log(color + ' insere jeton en colonne ' + (colonneCible + 1));
         this.valeurs[ligne][colonneCible] = (color === Color.ROUGE ? 'R' : 'J');
     }
     isColonneRemplie(colonneCible: number) {
@@ -48,18 +49,4 @@ export class Grille {
                 + this.valeurs[ligne][6]);
         }
     }
-
-    equals(grille: Grille): boolean {
-        for (let ligne: number = 0; ligne < 6; ligne++) {
-            for (let colonne = 0; colonne < 7; colonne++) {
-                if (this.valeurs[ligne][colonne] !== grille.valeurs[ligne][colonne]) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-
-    }
-
 } 

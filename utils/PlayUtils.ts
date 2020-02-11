@@ -5,6 +5,7 @@ import { Color } from "../models/Color";
 import { Play } from "../models/Play";
 import { Grille } from "../models/Grille";
 import { DBUtils } from "./DBUtils";
+import { HumanPlayer } from "../models/HumanPlayer";
 
 export class PlayUtils {
     static isWinner(grille: Grille, player: Player): boolean {
@@ -46,8 +47,8 @@ export class PlayUtils {
     static lancePartie(mode: PlayMode) {
         switch (mode) {
             case PlayMode.TRAINING:
-                let lettreJoueur1: IAPlayer = new IAPlayer(1, true, Color.ROUGE);
-                let lettreJoueur2: IAPlayer = new IAPlayer(1, true, Color.JAUNE);
+                let lettreJoueur1: IAPlayer = new IAPlayer(1, Color.ROUGE);
+                let lettreJoueur2: IAPlayer = new IAPlayer(1, Color.JAUNE);
                 const nbrPartiesTraining = 50000;
                 const reductionExploration = 0.95 / nbrPartiesTraining;
                 for (let iter: number = 0; iter < nbrPartiesTraining; iter++) {
@@ -63,26 +64,28 @@ export class PlayUtils {
                 break;
 
             case PlayMode.DUEL_IA:
-                let lettreJoueur3: IAPlayer = new IAPlayer(0.05, true, Color.ROUGE);
-                let lettreJoueur4: IAPlayer = new IAPlayer(0.05, true, Color.JAUNE);
-                let playTraining = new Play(PlayMode.DUEL_IA, lettreJoueur3, lettreJoueur4)
-                playTraining.launchPlay();
+                let lettreJoueur3: IAPlayer = new IAPlayer(0.05, Color.ROUGE);
+                let lettreJoueur4: IAPlayer = new IAPlayer(0.05, Color.JAUNE);
+                let playTDuelIA = new Play(PlayMode.DUEL_IA, lettreJoueur3, lettreJoueur4)
+                playTDuelIA.launchPlay();
                 DBUtils.mapToJson();
                 break;
 
             case PlayMode.DUEL_IA_HUMAIN:
-                console.log('inside PlayMode.DUEL_IA_HUMAIN');
-
-
+                let lettreJoueur5: IAPlayer = new IAPlayer(0.05, Color.ROUGE);
+                let lettreJoueur6: HumanPlayer = new HumanPlayer(Color.JAUNE);
+                let playDuelIAHumain= new Play(PlayMode.DUEL_IA_HUMAIN, lettreJoueur5, lettreJoueur6)
+                playDuelIAHumain.launchPlay();
+                DBUtils.mapToJson();
                 break;
         }
     }
 
-    static sleep(milliseconds:number) {
+    static sleep(milliseconds: number) {
         const date = Date.now();
         let currentDate = null;
         do {
-          currentDate = Date.now();
+            currentDate = Date.now();
         } while (currentDate - date < milliseconds);
-      }
+    }
 }

@@ -28,14 +28,16 @@ export class Play {
     launchPlay() {
         switch (this.playMode) {
             case PlayMode.TRAINING:
-                this.launchTraining();
+                this.launchDuel(false);
                 break;
             case PlayMode.DUEL_IA:
-                this.launchDuelIA();
+            case PlayMode.DUEL_IA_HUMAIN:
+                this.launchDuel(true);
                 break;
         }
     }
-    launchDuelIA() {
+
+    launchDuel(observateurHumain: boolean) {
         let randomPremierJoueur = RandomUtils.getRandomInt(2);
         while (!(this.winner || this.grille.isRemplie())) {
             this.nbrTour++;
@@ -43,41 +45,22 @@ export class Play {
             this.currentPlayer.play(this.grille);
 
             // on laisse quelques secondes à un observateur humain pour voir les modifs de grille
-            console.log('l IA ' + this.currentPlayer.color + ' a joue ')
-            PlayUtils.sleep(8000);
-           
-            this.winner = PlayUtils.isWinner(this.grille, this.currentPlayer);
-        }
-        if(this.winner){
-            console.log('there is a winner')
-            this.player1.learnWinner(this.currentPlayer);
-            this.player2.learnWinner(this.currentPlayer);
-        }
-        else{
-            console.log('grille remplie')
-            this.player1.learnWinner(null);
-            this.player2.learnWinner(null);
-        }
-    }
+            if (observateurHumain) {
+                console.log('l IA ' + this.currentPlayer.color + ' a joue ')
+                PlayUtils.sleep(5000);
+            }
 
-    launchTraining() {
-        let randomPremierJoueur = RandomUtils.getRandomInt(2);
-        while (!(this.winner || this.grille.isRemplie())) {
-            this.nbrTour++;
-            this.currentPlayer = (this.nbrTour + randomPremierJoueur) % 2 === 0 ? this.player1 : this.player2;
-            this.currentPlayer.play(this.grille);
             this.winner = PlayUtils.isWinner(this.grille, this.currentPlayer);
         }
-        if(this.winner){
+        if (this.winner) {
             console.log('there is a winner')
             this.player1.learnWinner(this.currentPlayer);
             this.player2.learnWinner(this.currentPlayer);
         }
-        else{
+        else {
             console.log('grille remplie')
             this.player1.learnWinner(null);
             this.player2.learnWinner(null);
         }
-        
     }
 }

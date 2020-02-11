@@ -11,28 +11,31 @@ export class IAPlayer extends Player {
     listActions: Array<Action>;
     // le facteur d'exploration/exploitation au debut de la partie ex: 0.85 veut dire 85% d'exploration et 15% d'exploitation
     explorationPart: number;
-    // joueur en mode training ou duel officiel
-    training: boolean;
 
-    constructor(explorationPart: number, training: boolean, color: Color) {
+    constructor(explorationPart: number, color: Color) {
         super(color);
         this.explorationPart = explorationPart;
-        this.training = training;
         this.listActions = new Array<Action>();
     }
 
     play(grille: Grille) {
         // on verifie si on va explorer ou exploiter
         let isExploring = Math.random() <= this.explorationPart;
+        let colonneJouee: number;
         if (isExploring) {
             console.log('on explore')
-            this.explorePlay(grille);
+            colonneJouee = this.explorePlay(grille);
         }
         else {
             console.log('on exploite')
-            this.exploitPlay(grille, this.color);
+            colonneJouee = this.exploitPlay(grille, this.color);
         }
-        grille.describe();
+        // on insere l'action que l'on va prendre dans notre liste d'actions
+        const action: Action = new Action(new Grille().hardCopyGrille(grille), this.color, colonneJouee);
+        this.listActions.push(action);
+
+        // on insere notre jeton dans la grille
+        grille.insereJeton(colonneJouee, this.color);
     }
 
 
@@ -41,7 +44,6 @@ export class IAPlayer extends Player {
         if (winner && winner.color === this.color) {
             isWinner = true;
         }
-
         this.gereFinPartie(isWinner);
     }
 
@@ -56,20 +58,16 @@ export class IAPlayer extends Player {
         DBUtils.updateDatabase(this.listActions);
     }
 
-    explorePlay(grille: Grille) {
+    explorePlay(grille: Grille): number {
         let colonneCible = RandomUtils.getRandomInt(7);
         while (grille.isColonneRemplie(colonneCible)) {
             colonneCible = RandomUtils.getRandomInt(7);
         }
-        // on insere l'action que l'on va prendre dans notre liste d'actions
-        const action: Action = new Action(new Grille().hardCopyGrille(grille), this.color, colonneCible);
-        this.listActions.push(action);
-
-        // on insere notre jeton dans la grille
-        grille.insereJeton(colonneCible, this.color);
+        return colonneCible;
     }
 
-    exploitPlay(grille: Grille, couleur: Color) {
+    exploitPlay(grille: Grille, couleur: Color): number {
+        let colonneCible: number;
         // on regarde dans notre base de donnees si on a deja observe cette grille pour ce joueur et si oui on prend la colonne avec le plus haut taux de reward
         if (DBUtils.mapGrilleJoueur.has(JSON.stringify({ grille: grille, couleur: couleur }))) {
             let listColonnesRewardSorted: Array<{ colonne: number, reward: number }> = DBUtils.mapGrilleJoueur.get(JSON.stringify({ grille: grille, couleur: couleur }))
@@ -78,7 +76,6 @@ export class IAPlayer extends Player {
                 .sort((result1, result2) => result1.reward > result2.reward ? -1 : 1);
             if (listColonnesRewardSorted.length > 0) {
                 let action: Action;
-                let colonneCible: number;
                 console.log("resultats dans exploitations")
                 listColonnesRewardSorted.forEach(colonneReward => {
                     console.log("colonne : " + colonneReward.colonne + " reward : " + colonneReward.reward);
@@ -88,8 +85,6 @@ export class IAPlayer extends Player {
                 if (listColonnesRewardSorted[0].reward > 0 || listColonnesRewardSorted.length === 7) {
                     // on insere l'action que l'on va prendre dans notre liste d'actions
                     colonneCible = listColonnesRewardSorted[0].colonne
-                    action = new Action(new Grille().hardCopyGrille(grille), this.color, colonneCible);
-                    console.log(' inside experiences positives : ' + colonneCible + ' colonne ')
                 }
                 else {
                     // sinon on a eu que des experiences negatives mais il reste des colonnes non testees => on va tester au hasard une de ces colonnes
@@ -101,26 +96,14 @@ export class IAPlayer extends Player {
                         colonneCible = RandomUtils.getRandomInt(7);
                         iterTentatives++;
                     }
-                    // on insere l'action que l'on va prendre dans notre liste d'actions
-                    action = new Action(new Grille().hardCopyGrille(grille), this.color, colonneCible);
-                    console.log(' inside experiences negatives : ' + colonneCible + ' colonne ')
                 }
-                this.listActions.push(action);
-                // on insere notre jeton dans la grille
-                grille.insereJeton(colonneCible, this.color);
             }
-            else {
-                // configuration inconnue => on explore
-                console.log('on a tente d exploite mais pas de meilleur coup trouve donc on va explorer');
-                // sinon on explore (on joue au hasard)
-                this.explorePlay(grille);
-            }
-        } else {
-            // sinon on explore (on joue au hasard)
-            console.log('on a tente d exploite mais pas de configuration trouve donc on va explorer');
-            this.explorePlay(grille);
         }
-
+        if (!colonneCible) {
+            console.log('on a tente d exploite mais pas de configuration trouve donc on va explorer');
+            colonneCible = this.explorePlay(grille);
+        }
+        return colonneCible;
     }
 
 }
