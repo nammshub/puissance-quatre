@@ -77,7 +77,7 @@ export class IAPlayer extends Player {
                 // .filter(colonneReward => colonneReward.reward > 0)
                 .sort((result1, result2) => result1.reward > result2.reward ? -1 : 1);
             if (listColonnesRewardSorted.length > 0) {
-                let action:Action;
+                let action: Action;
                 let colonneCible: number;
                 console.log("resultats dans exploitations")
                 listColonnesRewardSorted.forEach(colonneReward => {
@@ -89,20 +89,21 @@ export class IAPlayer extends Player {
                     // on insere l'action que l'on va prendre dans notre liste d'actions
                     colonneCible = listColonnesRewardSorted[0].colonne
                     action = new Action(new Grille().hardCopyGrille(grille), this.color, colonneCible);
+                    console.log(' inside experiences positives : ' + colonneCible + ' colonne ')
                 }
                 else {
                     // sinon on a eu que des experiences negatives mais il reste des colonnes non testees => on va tester au hasard une de ces colonnes
-                    let colonneCible = RandomUtils.getRandomInt(7);
+                    colonneCible = RandomUtils.getRandomInt(7);
                     let iterTentatives = 0;
-                    while (iterTentatives < 20 && (grille.isColonneRemplie(colonneCible) 
-                    || listColonnesRewardSorted.map(element => element.colonne).indexOf(colonneCible)) !== -1
+                    while (iterTentatives < 20 && (grille.isColonneRemplie(colonneCible)
+                        || listColonnesRewardSorted.map(element => element.colonne).indexOf(colonneCible)) !== -1
                     ) {
                         colonneCible = RandomUtils.getRandomInt(7);
                         iterTentatives++;
                     }
                     // on insere l'action que l'on va prendre dans notre liste d'actions
                     action = new Action(new Grille().hardCopyGrille(grille), this.color, colonneCible);
-                   
+                    console.log(' inside experiences negatives : ' + colonneCible + ' colonne ')
                 }
                 this.listActions.push(action);
                 // on insere notre jeton dans la grille
@@ -114,7 +115,12 @@ export class IAPlayer extends Player {
                 // sinon on explore (on joue au hasard)
                 this.explorePlay(grille);
             }
+        } else {
+            // sinon on explore (on joue au hasard)
+            console.log('on a tente d exploite mais pas de configuration trouve donc on va explorer');
+            this.explorePlay(grille);
         }
+
     }
 
 }
