@@ -47,6 +47,8 @@ export class Play {
             // on laisse quelques secondes à un observateur humain pour voir les modifs de grille
             if (observateurHumain) {
                 console.log('l IA ' + this.currentPlayer.color + ' a joue ')
+                this.grille.describe();
+                console.log('\n\n');
                 PlayUtils.sleep(5000);
             }
 
