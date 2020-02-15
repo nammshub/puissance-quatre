@@ -1,6 +1,5 @@
 import { Action } from '../models/Action';
-import { Grille } from '../models/Grille';
-import { Color } from '../models/Color';
+import { CONSTANTES } from '../Constantes';
 
 const fs = require('fs');
 
@@ -12,13 +11,13 @@ export class DBUtils {
 
     static mapToJson() {
         let mapToJSON = JSON.stringify(Array.from(DBUtils.mapGrilleJoueur.entries()));
-        fs.writeFileSync('C:/Users/dhain/Documents/DEV/RENFORCEMENT/puissance4.json', mapToJSON);
+        fs.writeFileSync(CONSTANTES.DB_PATH, mapToJSON);
 
 
     }
 
     static jsonToMap() {
-        let rawdata: string = fs.readFileSync('C:/Users/dhain/Documents/DEV/RENFORCEMENT/puissance4.json');
+        let rawdata: string = fs.readFileSync(CONSTANTES.DB_PATH);
         if (!rawdata || rawdata.length === 0) {
             DBUtils.mapGrilleJoueur = new Map();
         }

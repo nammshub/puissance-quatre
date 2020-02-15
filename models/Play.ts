@@ -3,6 +3,7 @@ import { PlayMode } from "./PlayMode";
 import { Grille } from "./Grille";
 import { PlayUtils } from "../utils/PlayUtils";
 import { RandomUtils } from "../utils/RandomUtils";
+import { CONSTANTES } from "../Constantes";
 
 export class Play {
 
@@ -49,7 +50,7 @@ export class Play {
                 console.log('l IA ' + this.currentPlayer.color + ' a joue ')
                 this.grille.describe();
                 console.log('\n\n');
-                PlayUtils.sleep(5000);
+                PlayUtils.sleep(1000 * CONSTANTES.SECONDES_PAUSE);
             }
 
             this.winner = PlayUtils.isWinner(this.grille, this.currentPlayer);
