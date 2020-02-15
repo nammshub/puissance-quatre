@@ -6,4 +6,4 @@ npm start
 
 # Database
 la base de donnée est le fichier JSON puissance4.json
-=> vous devrez modifier le chemin absolu situe dans DBUtils.ts pour que le code fonctionne sur votre machine locale (desole...)
+=> vous devrez modifier le chemin absolu situe dans Constantes.ts pour que le code fonctionne sur votre machine locale (desole...)
