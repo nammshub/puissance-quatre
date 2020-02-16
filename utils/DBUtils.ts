@@ -43,6 +43,9 @@ export class DBUtils {
                     // on ajoute cette colonne - reward aux valeurs de la clef dans la map
                     listColonneReward.push({ colonne: action.column, reward: action.reward });
                 }
+
+                // on injecte la liste mise à jour pour cette clef grille/joueur
+                DBUtils.mapGrilleJoueur.set(JSON.stringify({ grille: action.grille, couleur: action.color }), listColonneReward);
             }
             else {
                 // on injecte dans notre map cette configuration de grille, ce joueur ainsi que la colonne jouee et la reward
