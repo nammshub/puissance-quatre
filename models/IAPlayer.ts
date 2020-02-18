@@ -67,7 +67,7 @@ export class IAPlayer extends Player {
     }
 
     exploitPlay(grille: Grille, couleur: Color): number {
-        let colonneCible: number;
+        let colonneCible: number = -1;
         // on regarde dans notre base de donnees si on a deja observe cette grille pour ce joueur et si oui on prend la colonne avec le plus haut taux de reward
         if (DBUtils.mapGrilleJoueur.has(JSON.stringify({ grille: grille, couleur: couleur }))) {
             let listColonnesRewardSorted: Array<{ colonne: number, reward: number }> = DBUtils.mapGrilleJoueur.get(JSON.stringify({ grille: grille, couleur: couleur }))
@@ -75,7 +75,6 @@ export class IAPlayer extends Player {
                 // .filter(colonneReward => colonneReward.reward > 0)
                 .sort((result1, result2) => result1.reward > result2.reward ? -1 : 1);
             if (listColonnesRewardSorted.length > 0) {
-                let action: Action;
                 console.log("resultats dans exploitations")
                 listColonnesRewardSorted.forEach(colonneReward => {
                     console.log("colonne : " + colonneReward.colonne + " reward : " + colonneReward.reward);
@@ -99,7 +98,7 @@ export class IAPlayer extends Player {
                 }
             }
         }
-        if (!colonneCible) {
+        if (colonneCible === -1) {
             console.log('on a tente d exploite mais pas de configuration trouve donc on va explorer');
             colonneCible = this.explorePlay(grille);
         }
